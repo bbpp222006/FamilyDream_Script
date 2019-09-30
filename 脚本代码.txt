@@ -1,83 +1,111 @@
-
-
 Sub Auto()
-	Dim X(3), Y(3)
-	X(1) = 660
-	X(2) = 825
-	X(3) = 975
-	Y(1) = 1635
-	Y(2) = 1555
-	Y(3) = 1470
-	
-	Dim INDEX, UPCNT
-	UPCNT = 0
-	While True
-		
-		For INDEX = 1 To 3
-			TracePrint INDEX
-			TouchDown X(INDEX), Y(INDEX)
-			Delay 1000
-			Dim IntX,IntY
-			FindColor 0,0,0,0,"80FFFF|81FFFF|80FF00",0,1.0,intX,intY
-			If intX >-1 then
-    			Traceprint "找到货物"
-    			TouchMove intX + 50, intY
-    			Delay 200
-			Else
-    			Traceprint "没有货物"
-			End If
-			TouchUp
-		Next
-		
-		Delay 1000
-		TouchDown 200, 1280
-		TouchMove 1000, 825
-		TouchMove 820, 700
-		TouchMove 170, 1045
-		TouchMove 210, 760
-		TouchMove 900, 400
-		TouchUp
-	
-		Delay 1000
-		
-		UPCNT = UPCNT + 1
-		If UPCNT >= 10 Then 
-			UPCNT = 0
-			Call Up(300, 1170) //升级指定房屋
-			Delay 1000
-		End If
-	Wend
+  Dim ScreenX,ScreenY
+  ScreenX = GetScreenX()
+  ScreenY = GetScreenY()
+
+  Dim X(3), Y(3), Z(9,2)
+  X(1) = 660*ScreenX\1080
+  X(2) = 825*ScreenX\1080
+  X(3) = 975*ScreenX\1080
+  Y(1) = 1635*ScreenY\1920
+  Y(2) = 1555*ScreenY\1920
+  Y(3) = 1470*ScreenY\1920
+  
+  Z(1,1) = 300*ScreenX\1080
+  Z(1,2) = 1184*ScreenY\1920
+  Z(2,1) = 550*ScreenX\1080
+  Z(2,2) = 1061*ScreenY\1920
+  Z(3,1) = 800*ScreenX\1080
+  Z(3,2) = 961*ScreenY\1920
+  Z(4,1) = 300*ScreenX\1080
+  Z(4,2) = 935*ScreenY\1920
+  Z(5,1) = 550*ScreenX\1080
+  Z(5,2) = 810*ScreenY\1920
+  Z(6,1) = 800*ScreenX\1080
+  Z(6,2) = 687*ScreenY\1920
+  Z(7,1) = 300*ScreenX\1080
+  Z(7,2) = 681*ScreenY\1920
+  Z(8,1) = 550*ScreenX\1080
+  Z(8,2) = 568*ScreenY\1920
+  Z(9,1) = 800*ScreenX\1080
+  Z(9,2) = 447*ScreenY\1920
+
+
+
+
+
+
+  Dim INDEX, UPCNT
+  UPCNT = 0
+  While True
+    
+    For INDEX = 1 To 3
+      TracePrint INDEX
+      TouchDown X(INDEX), Y(INDEX)
+      Delay 1000
+      Dim IntX,IntY
+      FindColor 0,0,0,0,"80FFFF|81FFFF|80FF00",0,1.0,intX,intY
+      If intX >-1 then
+      ShowMessage "找到货物"
+      TouchMove intX + 50*ScreenX\1080, intY
+      Delay 200
+      Else
+      ShowMessage "没有货物"
+      End If
+      TouchUp
+    Next
+    
+    Delay 1000
+    TouchDown 200*ScreenX\1080, 1280*ScreenY\1920
+    TouchMove 1000*ScreenX\1080, 825*ScreenY\1920
+    TouchMove 820*ScreenX\1080, 700*ScreenY\1920
+    TouchMove 170*ScreenX\1080, 1045*ScreenY\1920
+    TouchMove 210*ScreenX\1080, 760*ScreenY\1920
+    TouchMove 900*ScreenX\1080, 400*ScreenY\1920
+    TouchUp
+  
+    Delay 1000
+    
+    UPCNT = UPCNT + 1
+    If UPCNT >= 100 Then
+      UPCNT = 0
+      Call Up(Z(9,1), Z(9,2)) //升级指定房屋
+      Call Up(Z(5,1), Z(5,2))
+      Delay 1000
+    End If
+  Wend
 End Sub
 
 
 Sub Up(X, Y)
-	Tap 970, 1145 //进入升级
-	Delay 1000
-	
-	while CmpColor(1050, 1160, "4DDDFF", 1.0) < 0
-		Traceprint "等待进入升级页面"
-		Delay 500
-	Wend
-	Tap X, Y  //点击建筑
-	Delay 1000
-	
-	Dim intX, intY, res
-	res = FindColor(900,1670, 990, 1700, "FFFFFF", 0, 1.0, intX, intY)
-	//如果没有找到，intX和intY的值都会被置为-1
-	While res > -1
-		Tap 870, 1750
-		Traceprint "升级一次"
-		Delay 500
-		res = FindColor(900,1670, 990, 1700, "FFFFFF", 0, 1.0, intX, intY)
-	Wend
-	
-	Traceprint "金币不足"
-	Tap 970, 1145 //退出升级
-	Delay 1000
+  Dim ScreenX,ScreenY
+  ScreenX = GetScreenX()
+  ScreenY = GetScreenY()
+  Tap 970*ScreenX\1080, 1145*ScreenY\1920 //进入升级
+  Delay 1000
+  
+  while CmpColor(1050*ScreenX\1080, 1160*ScreenY\1920, "4DDDFF", 1.0) < 0
+    ShowMessage "等待进入升级页面"
+    Delay 500
+  Wend
+  Tap X, Y //点击建筑
+  Delay 1000
+  
+  Dim intX, intY, res
+  res = FindColor(900*ScreenX\1080,1670*ScreenY\1920, 990*ScreenX\1080, 1700*ScreenY\1920, "FFFFFF", 0, 1.0, intX, intY)
+  //如果没有找到，intX和intY的值都会被置为-1
+  While res > -1
+    Tap 870*ScreenX\1080, 1750*ScreenY\1920
+    ShowMessage "升级一次"
+    Delay 500
+    res = -1
+  Wend
+  
+  ShowMessage "升级完成"
+  Tap 970*ScreenX\1080, 1145*ScreenY\1920 //退出升级
+  Delay 1000
 End Sub
 
 
 
 Call Auto()
-
-
